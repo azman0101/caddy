@@ -1,0 +1,29 @@
+name: Dependabot Auto-Merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    # Run if actor is dependabot OR if the actor is the repository owner (interpreting "my PR")
+    if: ${{ github.actor == 'dependabot[bot]' || github.actor == github.repository_owner }}
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        # Only fetch metadata for dependabot PRs
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Approve and Merge
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
