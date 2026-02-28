@@ -2,7 +2,7 @@
 FROM caddy:2.11.1-builder AS builder
 
 RUN xcaddy build \
-    --with github.com/hslatman/caddy-crowdsec-bouncer@v0.9.1 \
+    --with github.com/hslatman/caddy-crowdsec-bouncer@v0.10.0 \
     --output /usr/bin/caddy
 
 # Stage 2: Final
